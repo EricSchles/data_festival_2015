@@ -1,0 +1,4 @@
+*.creds
+google_api*
+*.pyc
+*.py~
