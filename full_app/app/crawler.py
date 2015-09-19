@@ -9,6 +9,8 @@ import os
 import pickle
 from models import CRUD,Ads,TrainData,KeyWords
 from text_classify import algorithms
+from textblob import TextBlob
+from tools import * #ParsePhoneNumber, ParseAddress
 
 
 #a web scraper, for local computation
@@ -92,8 +94,7 @@ class Scraper:
         }
         return places[place]
         
-
-    #need to fix
+    #need to fix database connections - document comparison is done!
     def investigate(self):
         data = self.scrape(self.base_urls)
         train_crud = CRUD("sqlite:///database.db",Ads,"ads")
@@ -108,12 +109,19 @@ class Scraper:
         cls.append(algorithms.decision_tree(train))
         nb = algorithms.naive_bayes(train)
         for datum in data:
-            for cl in cls:
-                if cl.classify(algorithms.preprocess(datum["text_body"])) == "trafficking":
+            if len(train) > 50: #totally a hack/rule of thumb 
+                for cl in cls:
+                    if cl.classify(algorithms.preprocess(datum["text_body"])) == "trafficking":
+                        self.save_ads([datum])
+            else:
+                if nb.classify(datum["text_body"])) == 'trafficking':
                     self.save_ads([datum])
-                
         time.sleep(700) # wait ~ 12 minutes
         self.investigate() #this is an infinite loop, which I am okay with.
+
+    #Todos:
+    #add location data and pull that in
+    #
                     
     def scrape(self,links=[],ads=True,translator=False):
         responses = []
@@ -173,7 +181,7 @@ class Scraper:
                 values["translated_title"] = "none"
             text_body = values["text_body"]
             title = values["title"]
-            values["phone_numbers"] = self.phone_number_parse(values)
+            values["phone_numbers"] = .phone_number_parse(values)
             data.append(values)
         
         return data
