@@ -175,6 +175,7 @@ class Scraper:
                 values["images"] = "weird index error"
             pre_decode_text = html.xpath("//div[@class='postingBody']")[0].text_content().replace("\n","").replace("\r","")  
             values["text_body"] = pre_decode_text 
+            #this appears to be broken
             try:
                 values["posted_at"] = html.xpath("//div[class='adInfo']")[0].text_content().replace("\n"," ").replace("\r","")
             except IndexError:
@@ -206,7 +207,7 @@ class Scraper:
                 text_headline=values["title"],
                 investigation=investigation,
                 link=values['link'],
-                photos=values['photos'],
+                photos=values['images'],
                 language=values['language'],
                 polarity=values['polarity'],
                 translated_body=values['translated_body'],
