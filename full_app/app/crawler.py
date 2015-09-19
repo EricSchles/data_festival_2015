@@ -150,6 +150,7 @@ class Scraper:
         return responses
     
     def save(responses,investigation="default"):
+        print type(responses)
         for r in responses:
             text = r.text
             html = lxml.html.fromstring(text)
@@ -221,7 +222,8 @@ class Scraper:
 
     #should this method remain?
     def initial_scrape(self,links):
-        responses = self.scrape(links)
+        responses = self.scrape(links=links)
+        print responses
         data = self.save(responses)
         return data
 
