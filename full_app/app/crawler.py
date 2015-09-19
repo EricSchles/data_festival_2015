@@ -8,7 +8,7 @@ import json
 import os
 import pickle
 from models import CRUD,Ads,TrainData,KeyWords
-
+from text_classify import algorithms
 
 
 #a web scraper, for local computation
@@ -105,8 +105,6 @@ class Scraper:
         t_docs = [elem.text for elem in train_crud.get_all()] #all documents with trafficking
         train = [(elem.text,"trafficking") for elem in train] + [(elem.text,"not trafficking") for elem in dummy]
         cls = []
-        #make use of tdf-idf here
-        #add in this example: http://scikit-learn.org/0.11/auto_examples/document_classification_20newsgroups.html
         cls.append(NBC(train))
         cls.append(DTC(train))
         for datum in data:
