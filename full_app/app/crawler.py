@@ -179,7 +179,7 @@ class Scraper:
             try:
                 values["posted_at"] = html.xpath("//div[class='adInfo']")[0].text_content().replace("\n"," ").replace("\r","")
             except IndexError:
-                values["posted_at"] = "not given"
+                values["posted_at"] = datetime.datetime.min #not given - this is just a quick fix because datetime objects are required
             values["scraped_at"] = str(datetime.datetime.now())
             body_blob = TextBlob(values["text_body"])
             title_blob = TextBlob(values["title"])
@@ -207,7 +207,7 @@ class Scraper:
                 text_headline=values["title"],
                 investigation=investigation,
                 link=values['link'],
-                photos=values['images'],
+                photos=json.dumps(values['images']),
                 language=values['language'],
                 polarity=values['polarity'],
                 translated_body=values['translated_body'],
