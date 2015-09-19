@@ -37,3 +37,10 @@ class AddressLogger(db.Model):
     def __repr(self):
         return '<address %r>' % self.address
 
+class BackpageLogger(db.Model):
+    __tablename__ = 'backpage_logger'
+    id = db.Column(db.Integer, primary_key=True)
+    text_body = db.Column(db.String(4000))
+    text_headline = db.Column(db.String(4000))
+    timestamp = db.Column(db.DateTime, default=datetime.datetime.now)
+
