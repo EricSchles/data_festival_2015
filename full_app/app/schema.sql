@@ -19,4 +19,28 @@ drop table if exists address_logger;
     timestamp text not null
 );
 
+drop table if exists backpage_logger;
+     create table backpage_logger(
+     id integer primary key autoincrement,
+     text_body text,
+     text_headline text,
+     investigation text,
+     link text,
+     timestamp text,
+     photos text,
+     language text,
+     polarity float,
+     translated_body text,
+     translated_title text,
+     subjectivity float,
+     posted_at text,
+     is_trafficking boolean
+);
 
+drop table if exists keywords;
+     create table keywords(
+     id integer primary key autoincrement,
+     keyword text not null
+);
+          
+	  

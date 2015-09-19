@@ -7,7 +7,7 @@ import datetime
 import json
 import os
 import pickle
-from models import CRUD,Ads,TrainData,KeyWords
+from models import *
 from text_classify import algorithms
 from textblob import TextBlob
 from tools import * #ParsePhoneNumber, ParseAddress
@@ -98,13 +98,8 @@ class Scraper:
     #need to fix database connections - document comparison is done!
     def investigate(self):
         data = self.scrape(self.base_urls)
-        train_crud = CRUD("sqlite:///database.db",Ads,"ads")
-        #getting dummy data from http://www.dummytextgenerator.com/#jump
-        dummy_crud = CRUD("sqlite:///database.db",TrainData,"training_data")
-        train = train_crud.get_all()
-        dummy = dummy_crud.get_all()
-        t_docs = [elem.text for elem in train_crud.get_all()] #all documents with trafficking
-        train = [(elem.text,"trafficking") for elem in train] + [(elem.text,"not trafficking") for elem in dummy]
+        training_data = [(elem, "trafficking") for elem in BackpageLogger.query.filter_by(is_trafficking=True).all()] 
+        training_data = [(elem, "not trafficking") for elem in BackpageLogger.query.filter_by(is_trafficking=False).all()]
         cls = []
         cls.append(algorithms.svm(train))
         cls.append(algorithms.decision_tree(train))
@@ -115,14 +110,14 @@ class Scraper:
                     if cl.classify(algorithms.preprocess(datum["text_body"])) == "trafficking":
                         self.save_ads([datum])
             else:
-                if nb.classify(datum["text_body"])) == 'trafficking':
+                if nb.classify(datum["text_body"]) == 'trafficking':
                     self.save_ads([datum])
-        time.sleep(700) # wait ~ 12 minutes
+        time.sleep(700) # wait ~ 12 minutes (consider changing this)
         self.investigate() #this is an infinite loop, which I am okay with.
 
     #Todos:
     #add location data and pull that in
-    #
+    
                     
     def scrape(self,links=[],ads=True,translator=False):
         responses = []
@@ -151,13 +146,15 @@ class Scraper:
                     except requests.exceptions.ConnectionError:
                         print "hitting connection error"
                         continue
-
+        return responses
+    
+    def save(responses,investigation="default"):
         for r in responses:
             text = r.text
             html = lxml.html.fromstring(text)
             values["title"] = html.xpath("//div[@id='postingTitle']/a/h1")[0].text_content()
             values["link"] = unidecode(r.url)
-            values["new_keywords"] = []
+            # Stub - add this with textRank - values["new_keywords"] = []
             try:
                 values["images"] = html.xpath("//img/@src")
             except IndexError:
@@ -183,13 +180,24 @@ class Scraper:
             text_body = values["text_body"]
             title = values["title"]
             values["phone_numbers"] = phone_parser.phone_number_parse(values)
+            bp_ad = BackpageLogger(
+                text_body=values["text_body"],
+                text_headline=values["title"],
+                investigation=investigation,
+                link=values['link'],
+                photos=values['photos'],
+                language=values['language'],
+                polarity=values['polarity'],
+                translated_body=values['translated_body']
+                
             data.append(values)
         
         return data
 
+    #should this method remain?
     def initial_scrape(self,links):
-        data = self.scrape(links)
-        self.save_ads(data)
+        responses = self.scrape(links)
+        self.save(responses)
         return data
     
     def pull_keywords(self,text):
@@ -197,25 +205,7 @@ class Scraper:
         the, and and other statistically common words for english language"""
         pass
 
-    def save_ads(self,data):
-        crud = CRUD("sqlite:///database.db",table="ads")
-        
-        for datum in data:
-            ad = Ads()
-            ad.title=datum["title"]
-            ad.phone_numbers=json.dumps(datum["phone_numbers"])
-            ad.text_body=datum["text_body"]
-            ad.photos=json.dumps(datum["images"])#change this so I'm saving actual pictures to the database.
-            ad.link=datum["link"]
-            ad.posted_at = datum["posted_at"]
-            ad.scraped_at=datum["scraped_at"]
-            ad.language=datum["language"]
-            ad.polarity=datum["polarity"]
-            ad.translated_body=datum["translated_body"]
-            ad.translated_title=datum["translated_title"]
-            ad.subjectivity=datum["subjectivity"]
-            crud.insert(ad)
-        
+    
 if __name__ == '__main__':
     scraper = Scraper(place="new york")
     data = scraper.initial_scrape(links=["http://newyork.backpage.com/FemaleEscorts/"])

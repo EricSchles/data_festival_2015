@@ -10,8 +10,9 @@ investigate.daemon=True
 
 @app.route("/",methods=["GET","POST"])
 def index():
-    return render_template("index.html")
+    return render_template("main.html")
 
+#Data Visualization Routes
 @app.route("/map", methods=["GET","POST"])
 def map():
     return render_template("map.html")
@@ -28,10 +29,15 @@ def bar():
 def pie():
     return render_template("pie.html")
 
+#Web Scraping Routes
+@app.route("/webscraping",methods=["GET","POST"])
+def webscraping():
+    return render_template("webscraping.html")
+
 @app.route("/run",methods=["GET","POST"])
 def run():
     data = scraper.scrape(links=["http://www.backpage.com"])
-    return redirect(url_for("index"))
+    return redirect(url_for("webscraping"))
 
 @app.route("/investigate",methods=["GET","POST"])
 def investigator():
@@ -39,13 +45,13 @@ def investigator():
         place = request.form.get("place")
         scraper.update_place(place)
         investigate.start()
-    return redirect(url_for("index"))
+    return redirect(url_for("webscraping"))
 
 @app.route("/stop_investigation",methods=["GET","POST"])
 def stop_investigation():
     #semantic bug here, fix this later (create a thread pool)
     investigate.terminate()
-    return redirect(url_for("index"))
+    return redirect(url_for("webscraping"))
 
 @app.route("/add",methods=["GET","POST"])
 def add():
@@ -59,4 +65,4 @@ def add_data():
         urls = url.split(",")
         print scraper.initial_scrape(links=urls)
         scraper.update_investigation(urls)
-    return redirect(url_for("index"))
+    return redirect(url_for("webscraping"))
