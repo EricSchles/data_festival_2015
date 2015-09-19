@@ -15,6 +15,7 @@ import distance
 def textrank(text):
     return TextRank(text=text)
 
+#fix this to allow for comparison between a document a set of documents
 def TfIdf(document_list):
     vectorizer = TfidfVectorizer(stop_words="english")
     X = vectorizer.fit_transform(document_list)

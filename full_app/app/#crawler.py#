@@ -108,7 +108,8 @@ class Scraper:
         cls.append(algorithms.decision_tree(train))
         nb = algorithms.naive_bayes(train)
         for datum in data:
-            for cl in cls:
+            if len(train) > 50: #totally a hack/rule of thumb 
+                for cl in cls:
                 if cl.classify(algorithms.preprocess(datum["text_body"])) == "trafficking":
                     self.save_ads([datum])
                 
