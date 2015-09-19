@@ -12,7 +12,9 @@ from text_classify import algorithms
 from textblob import TextBlob
 from tools import * #ParsePhoneNumber, ParseAddress
 from app import db
+
 phone_parser = ParsePhoneNumber()
+addr_parser = ParseAddress()
 
 #a web scraper, for local computation
 #At present, this seems to work fine
@@ -151,8 +153,7 @@ class Scraper:
         for r in responses:
             text = r.text
             html = lxml.html.fromstring(text)
-            #getting address information from html page
-            addr_parser = ParseAddress()
+            #getting address information from html page            
             possible_locations = html.xpath('//div[@style="padding-left:2em;"]')
             potential_lat_longs = []
             for loc in possible_locations:

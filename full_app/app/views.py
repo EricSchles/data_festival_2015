@@ -10,7 +10,7 @@ investigate.daemon=True
 
 @app.route("/",methods=["GET","POST"])
 def index():
-    return render_template("main.html")
+    return render_template("index.html")
 
 #Data Visualization Routes
 @app.route("/map", methods=["GET","POST"])
