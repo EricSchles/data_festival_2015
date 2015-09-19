@@ -181,6 +181,11 @@ class Scraper:
             values["phone_numbers"] = phone_parser.phone_number_parse(values)
             #is_trafficking is currently missing because it is being handled in investigate for some reason
             #this needs to be added to this method/made more readible
+            for p_number in values['phone_numbers']:
+                ad_phone_number = PhoneNumberLogger(p_number)
+                db.session.add(ad_phone_number)
+                db.session.commit()
+
             bp_ad = BackpageLogger(
                 text_body=values["text_body"],
                 text_headline=values["title"],
@@ -192,7 +197,9 @@ class Scraper:
                 translated_body=values['translated_body'],
                 translated_title=values['translated_title'],
                 subjectivity=values['subjectivity'],
-                posted_at=values['posted_at'])
+                posted_at=values['posted_at'],
+                phone_number=json.dumps(values['phone_numbers'])#this is gross and will be fixed at some point
+            )
             db.session.add(bp_ad)
             db.session.commit()
             data.append(values)

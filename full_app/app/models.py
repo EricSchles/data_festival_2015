@@ -73,7 +73,6 @@ class BackpageLogger(db.Model):
         self.is_trafficking = is_trafficking
         self.phone_number = phone_number
 
-
     def __repr__(self):
         return '<ad %r>' % self.text_headline 
 
