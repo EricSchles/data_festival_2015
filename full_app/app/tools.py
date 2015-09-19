@@ -138,7 +138,8 @@ class ParseAddress:
                 if any([part[1]==noun for noun in nouns]):
                     possible_streets.append(part[0])
             return possible_streets,"cross streets"
-                
+
+        #addresses: http://stackoverflow.com/questions/11160192/how-to-parse-freeform-street-postal-address-out-of-text-and-into-components
         #To do: build general list from http://www.nyc.gov/html/dcp/html/bytes/dwnlion.shtml
         #And from https://gis.nyc.gov/gisdata/inventories/details.cfm?DSID=932
         
