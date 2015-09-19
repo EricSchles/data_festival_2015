@@ -12,6 +12,7 @@ from text_classify import algorithms
 from textblob import TextBlob
 from tools import * #ParsePhoneNumber, ParseAddress
 
+phone_parser = ParsePhoneNumber()
 
 #a web scraper, for local computation
 #At present, this seems to work fine
@@ -181,7 +182,7 @@ class Scraper:
                 values["translated_title"] = "none"
             text_body = values["text_body"]
             title = values["title"]
-            values["phone_numbers"] = .phone_number_parse(values)
+            values["phone_numbers"] = phone_parser.phone_number_parse(values)
             data.append(values)
         
         return data
