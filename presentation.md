@@ -45,9 +45,13 @@
 
 Human Trafficking is defined as five major types of slavery:
 	* Sex Trafficking: Buying a person for sex
+
 	* Child Sex Trafficking: Buying a child for sex
+
 	* Labor Trafficking: Forcing someone to work for no money or other compensation against their will or without consent
+
 	* Bondage: Classical definition of being a slave
+
 	* Forced Servitude: forced to repay a debt without compensation, you are paying down your time instead of being paid
 
 Human Trafficking is a deeply complex issue and these five major facities are occurring all over the world - sometimes where you'd least expect it.  With my time at the manhattan DA's office we saw a lot of sex trafficking (the most prevalent in america) but there was also some labor trafficking, with the assumption that we weren't able to find a lot of it.
@@ -566,4 +570,3 @@ Here's the html:
 
 For this we'll make use of c3.js a wonderful library for doing time series data visualization.  And we'll also make use of ARIMA models to do some prediction.  Unfortunately I couldn't find any patterns before this talk, that led to actual prediction so I'll need to keep things fairly high level here.
 
-  
