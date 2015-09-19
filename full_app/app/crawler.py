@@ -152,10 +152,13 @@ class Scraper:
             text = r.text
             html = lxml.html.fromstring(text)
             #getting address information from html page
+            addr_parser = ParseAddress()
             possible_locations = html.xpath('//div[@style="padding-left:2em;"]')
+            potential_lat_longs = []
             for loc in possible_locations:
                 if "Location" in loc.text_content():
-                    
+                    for possible in loc.text_content().split("Location:")[1].split(","):
+                        potential_lat_longs.append(addr_parser.parse(possible))
 
             values["title"] = html.xpath("//div[@id='postingTitle']/a/h1")[0].text_content()
             values["link"] = unidecode(r.url)
