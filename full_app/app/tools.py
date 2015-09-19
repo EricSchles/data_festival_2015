@@ -3,6 +3,7 @@
 #Imports for ParsePhoneNumber
 import json
 import pickle
+import requests
 
 #Imports for ParseAddress
 import usaddress
@@ -10,6 +11,7 @@ from streetaddress import StreetAddressFormatter
 from nltk.tag.stanford import StanfordNERTagger as Tagger
 from geopy.geocoders import GoogleV3,Nominatim
 import nltk
+import geopy
 
 tagger = Tagger('/opt/stanford-ner-2014-08-27/classifiers/english.all.3class.distsim.crf.ser.gz','/opt/stanford-ner-2014-08-27/stanford-ner.jar')
 
@@ -107,8 +109,12 @@ class ParseAddress:
             #If None, means no address was recovered.
         if addr_type=='cross streets':
             cross_addr = " and ".join(addr) + place 
-            lat_long = g_coder.geocode(cross_addr)
-            return lat_long
+            try:
+                lat_long = g_coder.geocode(cross_addr)
+                return lat_long
+            except geopy.geocoders.googlev3.GeocoderQueryError:
+                return None
+            
 
             #remove near, split on commas, 
             #tag - div style="padding-left:2em;

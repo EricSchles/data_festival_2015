@@ -122,10 +122,7 @@ class Scraper:
     #Todos:
     #add location data and pull that in
     def scrape(self,links=[],ads=True,translator=False):
-        responses = []
-        values = {}
-        data = []
-        
+        responses = []        
         if ads:
             for link in links:
                 r = requests.get(link)
@@ -151,7 +148,10 @@ class Scraper:
         return responses
     
     def save(self,responses,investigation="default"):
+        data = []
+        
         for r in responses:
+            values= {}
             text = r.text
             html = lxml.html.fromstring(text)
             #getting address information from html page            
