@@ -15,7 +15,8 @@ drop table if exists phone_number_logger;
 drop table if exists address_logger;
     create table address_logger(
     id integer primary key autoincrement,
-    address text not null,
+    lat text not null,
+    long text not null,
     timestamp text not null
 );
 

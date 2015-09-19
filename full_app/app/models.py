@@ -28,14 +28,15 @@ class PhoneNumberLogger(db.Model):
 class AddressLogger(db.Model):
     __tablename__ = 'address_logger'
     id = db.Column(db.Integer, primary_key=True)
-    address = db.Column(db.String(1000))
+    lat = db.Column(db.Float(0))
+    long = db.Column(db.Float(0))
     timestamp = db.Column(db.DateTime, default=datetime.datetime.now)
 
-    def __init__(self,address):
-        self.address = address
-
+    def __init__(self,lat=0.0,long=0.0):
+        self.lat = lat
+        self.long = long
     def __repr(self):
-        return '<address %r>' % self.address
+        return '<lat_long %r>' % str(self.lat)+","+str(self.long)
 
 class BackpageLogger(db.Model):
     __tablename__ = 'backpage_logger'
