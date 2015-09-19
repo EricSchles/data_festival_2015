@@ -152,6 +152,11 @@ class Scraper:
             text = r.text
             html = lxml.html.fromstring(text)
             #getting address information from html page
+            possible_locations = html.xpath('//div[@style="padding-left:2em;"]')
+            for loc in possible_locations:
+                if "Location" in loc.text_content():
+                    
+
             values["title"] = html.xpath("//div[@id='postingTitle']/a/h1")[0].text_content()
             values["link"] = unidecode(r.url)
             # Stub - add this with textRank - values["new_keywords"] = []
