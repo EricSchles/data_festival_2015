@@ -95,7 +95,6 @@ class Scraper:
 
     #need to fix
     def investigate(self):
-        
         data = self.scrape(self.base_urls)
         train_crud = CRUD("sqlite:///database.db",Ads,"ads")
         #getting dummy data from http://www.dummytextgenerator.com/#jump
@@ -105,11 +104,11 @@ class Scraper:
         t_docs = [elem.text for elem in train_crud.get_all()] #all documents with trafficking
         train = [(elem.text,"trafficking") for elem in train] + [(elem.text,"not trafficking") for elem in dummy]
         cls = []
-        cls.append(NBC(train))
-        cls.append(DTC(train))
+        cls.append(algorithms.svm(train))
+        cls.append(algorithms.decision_tree(train))
         for datum in data:
             for cl in cls:
-                if cl.classify(datum["text_body"]) == "trafficking":
+                if cl.classify(algorithms.preprocess(datum["text_body"])) == "trafficking":
                     self.save_ads([datum])
             #so I don't have to eye ball things
             if doc_comparison(datum["text_body"],t_docs) == "trafficking":
