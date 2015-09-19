@@ -11,7 +11,7 @@ from models import *
 from text_classify import algorithms
 from textblob import TextBlob
 from tools import * #ParsePhoneNumber, ParseAddress
-
+from app import db
 phone_parser = ParsePhoneNumber()
 
 #a web scraper, for local computation
@@ -179,6 +179,8 @@ class Scraper:
             text_body = values["text_body"]
             title = values["title"]
             values["phone_numbers"] = phone_parser.phone_number_parse(values)
+            #is_trafficking is currently missing because it is being handled in investigate for some reason
+            #this needs to be added to this method/made more readible
             bp_ad = BackpageLogger(
                 text_body=values["text_body"],
                 text_headline=values["title"],
@@ -190,11 +192,10 @@ class Scraper:
                 translated_body=values['translated_body'],
                 translated_title=values['translated_title'],
                 subjectivity=values['subjectivity'],
-                posted_at=values['posted_at'],
-                is_trafficking=values[
-                
+                posted_at=values['posted_at'])
+            db.session.add(bp_ad)
+            db.session.commit()
             data.append(values)
-        
         return data
 
     #should this method remain?

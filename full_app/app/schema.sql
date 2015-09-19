@@ -34,7 +34,8 @@ drop table if exists backpage_logger;
      translated_title text,
      subjectivity float,
      posted_at text,
-     is_trafficking boolean
+     is_trafficking boolean,
+     phone_number text
 );
 
 drop table if exists keywords;
