@@ -13,6 +13,7 @@ from textblob import TextBlob
 from tools import * #ParsePhoneNumber, ParseAddress
 from app import db
 
+
 phone_parser = ParsePhoneNumber()
 addr_parser = ParseAddress()
 
@@ -149,8 +150,7 @@ class Scraper:
                         continue
         return responses
     
-    def save(responses,investigation="default"):
-        print type(responses)
+    def save(self,responses,investigation="default"):
         for r in responses:
             text = r.text
             html = lxml.html.fromstring(text)
