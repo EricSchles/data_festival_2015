@@ -159,7 +159,11 @@ class Scraper:
                 if "Location" in loc.text_content():
                     for possible in loc.text_content().split("Location:")[1].split(","):
                         potential_lat_longs.append(addr_parser.parse(possible))
-
+            lat_longs = [elem for elem in potential_lat_longs if elem != None]
+            for lat_long in lat_longs:
+                addr_log = AddressLogger(lat=lat_long.latitude,long=lat_long.longitude)
+                db.session.add(addr_log)
+                db.session.commit()
             values["title"] = html.xpath("//div[@id='postingTitle']/a/h1")[0].text_content()
             values["link"] = unidecode(r.url)
             # Stub - add this with textRank - values["new_keywords"] = []
@@ -217,15 +221,9 @@ class Scraper:
     #should this method remain?
     def initial_scrape(self,links):
         responses = self.scrape(links)
-        self.save(responses)
+        data = self.save(responses)
         return data
-    
-    def pull_keywords(self,text):
-        """This method should remove any very common english words like 
-        the, and and other statistically common words for english language"""
-        pass
 
-    
 if __name__ == '__main__':
     scraper = Scraper(place="new york")
     data = scraper.initial_scrape(links=["http://newyork.backpage.com/FemaleEscorts/"])
