@@ -95,7 +95,8 @@ class Scraper:
         }
         return places[place]
         
-    #need to fix database connections - document comparison is done!
+    #need to add TfIdf
+    #need to merge investigate and scrape methods or split this up further in someway, but currently this is bad and confusing
     def investigate(self):
         data = self.scrape(self.base_urls)
         training_data = [(elem, "trafficking") for elem in BackpageLogger.query.filter_by(is_trafficking=True).all()] 
@@ -117,8 +118,6 @@ class Scraper:
 
     #Todos:
     #add location data and pull that in
-    
-                    
     def scrape(self,links=[],ads=True,translator=False):
         responses = []
         values = {}
@@ -188,7 +187,11 @@ class Scraper:
                 photos=values['photos'],
                 language=values['language'],
                 polarity=values['polarity'],
-                translated_body=values['translated_body']
+                translated_body=values['translated_body'],
+                translated_title=values['translated_title'],
+                subjectivity=values['subjectivity'],
+                posted_at=values['posted_at'],
+                is_trafficking=values[
                 
             data.append(values)
         
