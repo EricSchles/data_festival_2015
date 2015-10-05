@@ -108,19 +108,19 @@ month_to_num = {
 @app.route("/timeseries",methods=["GET","POST"])
 def timeseries():
     df = pd.DataFrame().from_csv("homeless_data.csv")
-    year = [str(elem) for elem in list(df["year"])]
-    month = [month_to_num[elem] for elem in list(df["month"])]
+    year = [str(elem) for elem in df["year"].tolist()]
+    month = [month_to_num[elem] for elem in df["month"].tolist()]
     dates = ["01"+"-"+i+"-"+j for i,j in zip(month,year)]
     return render_template("timeseries.html",
-                           adults_in_families=json.dumps(["adults_in_families"]+list(df["adults_in_families"])),
-                           average_shelter_stays_for_families=json.dumps(["average_shelter_stays_for_families"]+list(df["average_shelter_stays_for_families"])),
-                           children=json.dumps(["children"]+list(df["children"])),
-                           single_adults=json.dumps(["single_adults"]+list(df["single_adults"])),
-                           single_men=json.dumps(["single_men"]+list(df["single_men"])),
-                           single_women=json.dumps(["single_women"]+list(df["single_women"])),
-                           total_families=json.dumps(["total_families"]+list(df["total_families"])),
-                           total_persons_in_families=json.dumps(["total_persons_in_families"]+list(df["total_persons_in_families"])),
-                           total_population=json.dumps(["total_population"]+list(df["total_population"])),
+                           adults_in_families=json.dumps(["adults_in_families"]+df["adults_in_families"].tolist()),
+                           average_shelter_stays_for_families=json.dumps(["average_shelter_stays_for_families"]+df["average_shelter_stays_for_families"].tolist()),
+                           children=json.dumps(["children"]+df["children"].tolist()),
+                           single_adults=json.dumps(["single_adults"]+df["single_adults"].tolist()),
+                           single_men=json.dumps(["single_men"]+df["single_men"].tolist()),
+                           single_women=json.dumps(["single_women"]+df["single_women"].tolist()),
+                           total_families=json.dumps(["total_families"]+df["total_families"].tolist()),
+                           total_persons_in_families=json.dumps(["total_persons_in_families"]+df["total_persons_in_families"].tolist()),
+                           total_population=json.dumps(["total_population"]+df["total_population"].tolist()),
                            dates=json.dumps(["dates"] +dates))
 
 @app.route("/bar",methods=["GET","POST"])
