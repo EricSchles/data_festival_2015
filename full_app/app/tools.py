@@ -117,14 +117,14 @@ class ParseAddress:
                 lat_long = g_coder.geocode(addr)
                 return lat_long
             #If None, means no address was recovered.
-        if addr_type=='cross streets':
+        if addr_type == 'cross streets':
             cross_addr = " and ".join(addr) + place 
             try:
                 lat_long = g_coder.geocode(cross_addr)
                 return lat_long
             except geopy.geocoders.googlev3.GeocoderQueryError:
                 return None
-
+        
     #remove near, split on commas, 
     #tag - div style="padding-left:2em;
     #two possible return "types" - complete a real address or cross streets, which only gives two cross streets and therefore an approximate area
